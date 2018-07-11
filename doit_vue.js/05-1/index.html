@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Vue Template</title>
+  </head>
+  <body>
+    <div id="app">
+      <h3>데이터 바인딩</h3>
+      <p>{{ message }}</p>
+      <p v-bind:id="idA">아이디 바인딩</p>
+      <p v-bind:class="classA">클래스 바인딩</p>
+      <p v-bind:style="styleA">스타일 바인딩</p>
+      <hr />
+
+      <h3>자바스크립트 표현식</h3>
+      <p>{{ message }}</p>
+      <p>{{ message + "!!!" }}</p>
+      <p>{{ message.split('').reverse().join('') }}</p>
+      <hr />
+
+      <h3>자바스크립트 표현식 사용시 주의할 점</h3>
+      <!-- {{ var a = 10; }} --> <!-- X, 선언문 사용 불가 -->
+      <!-- {{ if (true) { return 100} }} --> <!-- X, 분기 구문 사용 불가 -->
+      <p>{{ true ? 100 : 0 }}</p> <!-- O, 삼항 연산자로 표현 가능 -->
+      <p>{{ message.split('').reverse().join('' )}}</p> <!-- X, 복잡한 연산은 인스턴스 안에서 수행 -->
+      <p>{{ reversedMessage }}</p> <!-- O, 스크립트에서 computed 속성으로 계산한 후 최종 값만 표현 -->
+      <hr />
+
+      <h3>디렉티브</h3>
+      <a v-if="flag">Do it! Vue.js</a>
+      <ul>
+        <li v-for="system in systems">
+          {{ system }}
+        </li>
+      </ul>
+      <p v-show="flag">
+        Do it! Vue.js
+      </p>
+      <h5 v-bind:id="uid">뷰 입문서</h5>
+      <button v-on:click="popupAlert">경고 창 버튼</button>
+      <hr />
+
+      <h3>이벤트 처리</h3>
+      <button v-on:click="clickBtn">클릭</button>
+      <button v-on:click="clickBtnVar(10)">클릭 : 인자값 전달</button>
+      <button v-on:click="clickBtnEvent">클릭 : 이벤트 인자값</button>
+      <hr />
+
+      <h3>고급 템플릿 기법</h3>
+        <h4>computed 속성과 methods 속성의 차이점</h5>
+          <p>{{ message }}</p>
+          <button v-on:click="reverseMsg">문자열 역순</button>
+        <h4>watch 속성</h4>
+          <input v-model="message" >
+
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.5.2/dist/vue.js"></script>
+    <script>
+      var vue = new Vue({
+        el: '#app',
+        data: {
+          idA: 10,
+          classA: 'container',
+          styleA: 'color: blue',
+          message: 'Hello Vue.js!',
+          flag: true,
+          systems: ['android', 'ios', 'windows', 'osx'],
+          uid: 10
+        },
+        computed: {
+          reversedMessage: function() {
+            return this.message.split('').reverse().join('');
+          }
+        },
+        methods: {
+          popupAlert: function() {
+            return alert('경고 창 표시');
+          },
+          clickBtn: function() {
+            alert('clicked');
+          },
+          clickBtnVar: function(num) {
+            alert('clicked ' + num + ' times');
+          },
+          clickBtnEvent: function(event) {
+            console.log(event);
+          },
+          reverseMsg: function() {
+            this.message = this.message.split('').reverse().join('');
+            return this.message;
+          }
+        },
+        watch: {
+          message: function(data) {
+            console.log("message 값이 바뀝니다 : ", data);
+          }
+        }
+      });
+    </script>
+  </body>
+</html>
