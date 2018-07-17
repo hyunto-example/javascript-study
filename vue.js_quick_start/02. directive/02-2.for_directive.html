@@ -23,6 +23,11 @@
             color: yellow;
             background-color: purple;
         }
+        
+        .divider {
+            height: 2px;
+            background-color: gray;
+        }
     </style>
 </head>
 
@@ -38,14 +43,44 @@
                 </tr>
             </thead>
             <tbody id="contacts">
-                <tr v-for="contact in contacts">
-                    <td>{{ contact.no }}</td>
+                <tr v-for="(contact, index) in contacts" v-if="contact.address.indexOf('서울') > -1">
+                    <td>{{ index + 1 }}</td>
                     <td>{{ contact.name }}</td>
                     <td>{{ contact.tel }}</td>
                     <td>{{ contact.address }}</td>
                 </tr>
+                <tr class="divider">
+                    <td colspan="4"></td>
+                </tr>
+                <template v-for="(contact, index) in contacts">
+                    <tr :key="contact.no">
+                        <td>{{ index + 1 }}</td>
+                        <td>{{ contact.name }}</td>
+                        <td>{{ contact.tel }}</td>
+                        <td>{{ contact.address }}</td>
+                    </tr>
+                    <tr class="divider" v-if="index % 5 === 4">
+                        <td colspan="4"></td>
+                    </tr>
+            </template>
             </tbody>
         </table>
+
+        <!-- 
+            배열 객체를 v-for으로 사용시 문제점
+            배열 데이터를 인덱스 번호를 사용해 직접 변경할 경우 데이터 변경이 추적되지 않는다.
+            예를 들어, 위 코드에서 list.contacts[0] = { no: 100, name: "다혜", tel: "010-1111-1111", address: "제주"}로 값을 수정할 경우 화면에 변화가 없다.
+            반면 각 배열 값 내부 속성을 직접 변경하는 것은 Vue 인스턴스의 Watcher가 추적하기 때문에 변경된다. 
+            예를 들면, list.contacts[0].address = "경기"로 값을 수정하면 반영된다
+            결과적으로 가능하면 배열 객체가 지원하는 메서드를 통해 데이터 변경을 하는 것이 가장 좋다.
+        -->
+    </div>
+
+    <div id="example2">
+        <select id="regions">
+            <option disabled="disabled" selected>지역을 선택하세요.</option>
+            <option v-for="(val, key, index) in regions" v-bind:value="key">{{ index + 1 }} : {{ val }}</option>
+        </select>
     </div>
 
     <script>
@@ -62,27 +97,27 @@
                 "no": 99,
                 "name": "혜리",
                 "tel": "010-1234-5678",
-                "address": "서울"
+                "address": "대전"
             }, {
                 "no": 98,
                 "name": "하니",
                 "tel": "010-1234-5678",
-                "address": "서울"
+                "address": "대구"
             }, {
                 "no": 97,
                 "name": "성소",
                 "tel": "010-1234-5678",
-                "address": "서울"
+                "address": "부산"
             }, {
                 "no": 96,
                 "name": "지아",
                 "tel": "010-1234-5678",
-                "address": "서울"
+                "address": "인천"
             }, {
                 "no": 95,
                 "name": "정연",
                 "tel": "010-1234-5678",
-                "address": "서울"
+                "address": "경기"
             }, {
                 "no": 94,
                 "name": "쯔위",
@@ -92,7 +127,7 @@
                 "no": 93,
                 "name": "사나",
                 "tel": "010-1234-5678",
-                "address": "서울"
+                "address": "부산"
             }, {
                 "no": 92,
                 "name": "모모",
@@ -102,7 +137,7 @@
                 "no": 91,
                 "name": "소진",
                 "tel": "010-1234-5678",
-                "address": "서울"
+                "address": "경기"
             }, {
                 "no": 90,
                 "name": "유라",
@@ -114,6 +149,21 @@
         var list = new Vue({
             el: '#example',
             data: model
+        });
+
+        var regions = {
+            "A": "Asia",
+            "B": "America",
+            "C": "Europe",
+            "D": "Africa",
+            "E": "Oceania"
+        };
+
+        new Vue({
+            el: '#example2',
+            data: {
+                regions: regions
+            }
         });
     </script>
 </body>
