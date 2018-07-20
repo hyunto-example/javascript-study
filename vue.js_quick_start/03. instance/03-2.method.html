@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initail-scale=1.0">
+    <title>Vue.js</title>
+    <script src="https://unpkg.com/vue"></script>
+</head>
+
+<body>
+    <div id="method_option">
+        <input type="text" v-model="num"><br> 1부터 입력된 수 까지의 합 : <span>{{ sum() }}</span>
+    </div>
+
+    <script>
+        var method_option = new Vue({
+            el: '#method_option',
+            data: {
+                num: 0
+            },
+            methods: {
+                sum: function() {
+                    console.log(Date.now());
+                    var n = Number(this.num);
+                    if (Number.isNaN(n) || n < 1) {
+                        return 0;
+                    }
+                    return ((1 + n) * n) / 2;
+                }
+            }
+        });
+    </script>
+</body>
+
+</html>
