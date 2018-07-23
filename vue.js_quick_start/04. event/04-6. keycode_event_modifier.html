@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vue.js</title>
+    <style>
+        #list {
+            width: 400px;
+            border: 1px solid black;
+            border-collapse: collapse;
+        }
+        
+        #list td,
+        #list th {
+            border: 1px solid black;
+            text-align: center;
+        }
+        
+        #list>thead>tr {
+            color: yellow;
+            background-color: purple;
+        }
+        
+        [v-clock] {
+            display: none;
+        }
+    </style>
+</head>
+
+<body>
+    <!--
+        KeyCode 수식어 : 키보드 관련 이벤트를 처리할 때 사용되는 수식어
+        키보드의 키를 누를 때 고유의 Key Code 값을 가질 때만 이벤트를 발생시킨다.
+        {event}.{keyCode} 형태로 이벤트 수식어를 사용가능하다.
+        모든 keyCode를 기억할 수는 없기 때문에 자주 사용되는 Key Code는 별칭을 사용한다.
+          - .enter
+          - .tab
+          - .delete
+          - .esc
+          - .space
+          - .up
+          - .down
+          - .left
+          - .right
+          - .ctrl
+          - .alt
+          - .shift
+          - .meta
+    -->
+    <div id="example">
+        <p>
+            이름 : <input type="text" v-model="name" placeholder="두 자 이상 입력 하세요." v-on:keyup.13="search">
+        </p>
+        <table id="list">
+            <thead>
+                <tr>
+                    <td>번호</td>
+                    <td>이름</td>
+                    <td>전화번호</td>
+                    <td>주소</td>
+                </tr>
+            </thead>
+            <tbody id="contacts">
+                <tr v-for="contact in contactlist">
+                    <td>{{ contact.no }}</td>
+                    <td>{{ contact.name }}</td>
+                    <td>{{ contact.tel }}</td>
+                    <td>{{ contact.address }}</td>
+                </tr>
+            </tbody>
+        </table>
+        <div v-show="isProcessing === true">조회중...</div>
+    </div>
+
+    <script src="https://unpkg.com/vue/dist/vue.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fetch/2.0.3/fetch.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/es6-promise/4.1.1/es6-promise.auto.min.js"></script>
+    <script>
+        var vm = new Vue({
+            el: '#example',
+            data: {
+                name: "",
+                isProcessing: false,
+                contactlist: []
+            },
+            // watch: {
+            //     name: function(val) {
+            //         if (val.length >= 2) {
+            //             this.fetchContacts();
+            //         } else {
+            //             this.contactlist = [];
+            //         }
+            //     }
+            // },
+            methods: {
+                search: function(e) {
+                    console.log("### KEYUP ###");
+                    console.log(e);
+                    // if (e.keyCode === 13) {
+                    console.log("Key Code : ", e.keyCode);
+                    var val = e.target.value;
+                    if (val.length >= 2) {
+                        this.fetchContacts();
+                    } else {
+                        this.contactlist = [];
+                    }
+                    // }
+                },
+                fetchContacts: function() {
+                    this.contactlist = [];
+                    this.isProcessing = true;
+                    var url = "http://sample.bmaster.kro.kr/contacts_long/search/" + this.name;
+                    var vm = this;
+                    fetch(url)
+                        .then(function(response) {
+                            return response.json()
+                        })
+                        .then(function(json) {
+                            vm.contactlist = json;
+                            vm.isProcessing = false;
+                        })
+                        .catch(function(ex) {
+                            console.log('parsing failed', ex);
+                            vm.contactlist = [];
+                            vm.isProcessing = false;
+                        })
+                }
+            }
+        });
+    </script>
+</body>
+
+</html>

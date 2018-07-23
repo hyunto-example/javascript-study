@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initail-scale=1.0">
+    <title>Vue.js</title>
+    <script src="https://unpkg.com/vue/dist/vue.min.js"></script>
+    <style>
+        html,
+        body {
+            margin: 0;
+            padding: 0;
+        }
+        
+        #example {
+            height: 98vh;
+            min-height: 100%;
+            padding: 5px;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="example" v-on:contextmenu.prevent="ctxStop">
+        <a href="https://facebook.com" @click="confirmFB">페이스북</a>>
+    </div>
+
+    <script>
+        var example = new Vue({
+            el: '#example',
+            methods: {
+                ctxStop: function(e) {
+                    // e.preventDefault();
+                    console.log("Vue.js의 이벤트 수식어(Event Modifier)인 .prevent로 인해 Method 안에 e.preventDefault()를 작성하지 않아도 된다.")
+                },
+                confirmFB: function(e) {
+                    console.log("이 예제와 같이 논리식에 따라 실행 여부가 달라질 경우 이벤트 수식어(Event Modifier)를 사용할 수 없다.")
+                    if (!confirm("페이스북으로 이동할까요?")) {
+                        e.preventDefault();
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+
+</html>
