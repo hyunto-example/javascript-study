@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vue.js</title>
+    <script src="https://unpkg.com/vue/dist/vue.js"></script>
+</head>
+
+<body>
+    <!-- 
+        "인라인 스타일"이란?
+        HTML 요소의 style 프로퍼티에 CSS를 기술하는 방식을 뜻한다.
+        기본적으로 인라인 스타일은 권장하지는 않으나 필요한 경우가 있기 때문에 알아둬야 한다.
+        Vue.js에서 인라인 스타일은 v-bind:style로 작성한다.
+    -->
+    <div id="example">
+        <button id="a" v-bind:style="style1" @mouseover.stop="overEvent" @mouseout.stop="outEvent">테스트</button>
+    </div>
+
+    <div id="example2">
+        <div :style="{ backgroundColor: a.bc, border: a.bd, width: a.w+'px', height: a.h+'px'}"></div>
+    </div>
+
+    <div id="example3">
+        <button id="btn1" v-bind:style="[ myColor, myLayout ]">버튼1</button>
+    </div>
+
+    <script type="text/javascript">
+        var example = new Vue({
+            el: '#example',
+            data: {
+                style1: {
+                    backgroundColor: 'aqua',
+                    border: 'solid 1px gray',
+                    with: '100px',
+                    textAlign: 'center'
+                }
+            },
+            methods: {
+                overEvent: function(e) {
+                    this.style1.backgroundColor = "purple";
+                    this.style1.color = "yellow";
+                },
+                outEvent: function(e) {
+                    this.style1.backgroundColor = "aqua";
+                    this.style1.color = "black";
+                }
+            }
+        });
+
+        var example2 = new Vue({
+            el: '#example2',
+            data: {
+                a: {
+                    bc: 'yellow',
+                    bd: 'solid 1px gray',
+                    w: 200,
+                    h: 100
+                }
+            }
+        });
+
+        var example3 = new Vue({
+            el: '#example3',
+            data: {
+                myColor: {
+                    backgroundColor: 'purple',
+                    color: 'yellow'
+                },
+                myLayout: {
+                    width: '150px',
+                    height: '80px',
+                    textAlign: 'center'
+                }
+            }
+        });
+    </script>
+</body>
+
+</html>
