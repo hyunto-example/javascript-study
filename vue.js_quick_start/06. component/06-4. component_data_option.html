@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vue.js</title>
+    <script src="https://unpkg.com/vue/dist/vue.js"></script>
+</head>
+
+<template id='timeTemplate'>
+    <div>
+        <span>{{ nowTS }}</span>
+        <button v-on:click="timeClick">현재 시간</button>
+    </div>
+</template>
+<script type="text/javascript">
+    Vue.component('time-component', {
+        template: '#timeTemplate',
+        // data: {
+        //     nowTS: 0
+        // },
+        // 컴포넌트의 data 옵션에 함수를 사용하는 이유는
+        // 동일한 컴포넌트를 여러 곳에서 재사용 할 때, 동일한 객체를 가리키는 것이 아니라
+        // 매 컴포넌트의 함수가 호출될 때마다 새롭게 만들어진, 각기 다른 객체가 리턴되어 서로 다른 객체를 참조하게 하기 위함이다.
+        data: function() {
+            return {
+                nowTS: 0
+            }
+        },
+        methods: {
+            timeClick: function(e) {
+                this.nowTS = (new Date()).getTime();
+            }
+        }
+    });
+    var data = {
+        nowTS: 0
+    };
+    Vue.component('same-object-of-data', {
+        template: '#timeTemplate',
+        data: function() {
+            return data;
+        },
+        methods: {
+            timeClick: function(e) {
+                this.nowTS = (new Date()).getTime();
+            }
+        }
+    })
+</script>
+
+<body>
+    <div id="app">
+        <time-component></time-component>
+        <time-component></time-component>
+        <hr>
+        <same-object-of-data></same-object-of-data>
+        <same-object-of-data></same-object-of-data>
+    </div>
+</body>
+<script type="text/javascript">
+    Vue.config.devtools = true;
+    var v = new Vue({
+        el: '#app'
+    });
+</script>
+
+</html>

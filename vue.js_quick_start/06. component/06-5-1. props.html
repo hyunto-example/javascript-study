@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vue.js</title>
+    <script src="https://unpkg.com/vue/dist/vue.js"></script>
+</head>
+
+<template id="listTemplate">
+    <li>{{ message }}</li>
+</template>
+
+<script type="text/javascript">
+    Vue.component('list-component', {
+        template: '#listTemplate',
+        props: [
+            'message'
+        ]
+    });
+    Vue.component('list-component-2', {
+        template: '#listTemplate',
+        props: {
+            message: {
+                type: String,
+                default: '안녕하세요.'
+            },
+            count: {
+                type: Number,
+                required: true
+            }
+        }
+    });
+    Vue.component('list-component-3', {
+        template: '#listTemplate',
+        props: {
+            message: {
+                type: String,
+                default: '안녕하세요'
+            },
+            count: {
+                type: Number,
+                required: true
+            },
+            countries: {
+                type: Array,
+                default: function() {
+                    return ['대한민국']
+                }
+            }
+        }
+    });
+</script>
+
+<body>
+    <div id="app">
+        <ul>
+            <list-component message="Hello"></list-component>
+            <list-component message="씬짜오"></list-component>
+            <list-component message="니하오마"></list-component>
+        </ul>
+        <ul>
+            <list-component-2 message="Hello" v-bind:count="100"></list-component-2>
+            <list-component-2 message="씬자오" :count="21"></list-component-2>
+            <list-component-2 message="니하오마"></list-component-2>
+            <list-component-2 :count="100"></list-component-2>
+        </ul>
+        <ul>
+            <list-component-3 message="Hello" v-bind:count="100" v-bind:countries="['미국', '영국', '호주']"></list-component-3>
+            <list-component-3 message="씬자오" :count="21" :countries="['베트남']"></list-component-3>
+            <list-component-3 message="니하오마" :countries="['중국', '타이완']"></list-component-3>
+            <list-component-3 :count="100"></list-component-3>
+        </ul>
+    </div>
+</body>
+<script type="text/javascript">
+    Vue.config.devtools = true;
+    var vm = new Vue({
+        el: '#app'
+    });
+</script>
+
+</html>

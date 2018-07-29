@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vue.js</title>
+    <script src="https://unpkg.com/vue/dist/vue.js"></script>
+</head>
+
+<!-- Child Component 시작 -->
+<style>
+    .buttonstyle {
+        width: 120px;
+        height: 30px;
+        text-align: center;
+    }
+</style>
+<template id="childTemplate">
+    <div>
+        <button class="buttonstyle" v-on:click="clickevent" v-bind:data-lang="buttonInfo.value">{{ buttonInfo.text }}</button>
+    </div>
+</template>
+<script type="text/javascript">
+    Vue.component('child-component', {
+        template: '#childTemplate',
+        props: [
+            'buttonInfo'
+        ],
+        methods: {
+            clickevent: function(e) {
+                console.log('e.target.innerText', e.target.innerText);
+                console.log('e.target.dataset.lang', e.target.dataset.lang);
+                this.$emit('timeclick', e.target.innerText, e.target.dataset.lang);
+            }
+        }
+    })
+</script>
+<!-- Child Component 끝 -->
+
+<!-- Parent Component 시작 -->
+<template id="parentTemplate">
+    <div>
+        <child-component v-for="s in buttons" v-bind:button-info="s" v-on:timeclick="timeclickEvent"></child-component>
+        <hr/>
+        <div>
+            {{ msg }}
+        </div>
+    </div>
+</template>
+<script type="text/javascript">
+    Vue.component('parent-component', {
+        template: '#parentTemplate',
+        props: [
+            'buttons'
+        ],
+        data: function() {
+            return {
+                msg: ""
+            };
+        },
+        methods: {
+            timeclickEvent: function(k, v) {
+                this.msg = k + ", " + v;
+            }
+        }
+    })
+</script>
+<!-- Parent Component 끝 -->
+
+<body>
+    <div id="app">
+        <parent-component :buttons="buttons"></parent-component>
+    </div>
+</body>
+<script type="text/javascript">
+    Vue.config.devtools = true;
+    var vm = new Vue({
+        el: '#app',
+        data: {
+            buttons: [{
+                text: "Hello",
+                value: "영어"
+            }, {
+                text: "씬짜오",
+                value: "베트남어"
+            }, {
+                text: "니하오",
+                value: "중국어"
+            }]
+        }
+    })
+</script>
+
+</html>
