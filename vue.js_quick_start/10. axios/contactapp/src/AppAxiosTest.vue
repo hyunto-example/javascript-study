@@ -8,7 +8,7 @@
                 <input type="text" v-model="name" placeholder="이름을 입력합니다.">
                 <input type="text" v-model="tel" placeholder="전화번호를 입력합니다.">
                 <input type="text" v-model="address" placeholder="주소를 입력합니다.">
-                <button @click="addContact"></button>
+                <button @click="addContact">연락처 1건 추가</button>
             </div>
             <div class="form-group">
                 <input type="text" v-model="no">
@@ -54,22 +54,84 @@ export default {
     },
     methods: {
         fetchContacts: function() {
-
+            axios({
+                method: 'GET',
+                url: '/api/contacts',
+                params: {
+                    pageno: 1,
+                    pagesize: 5
+                }
+            })
+            .then((response) => {
+                console.log(response);
+                this.result = response.data;
+            })
+            .catch((ex) => {
+                console.log("ERROR!!! : ", ex);
+            });
         },
         addContact: function() {
-
+            axios.post('/api/contacts', {
+                name: this.name,
+                tel: this.tel,
+                address: this.address
+            })
+            .then((response) => {
+                console.log(response);
+                this.result = response.data;
+                this.no = response.data.no;
+            })
+            .catch((ex) => {
+                console.log("ERROR!!! : ", ex);
+            });
         },
         fetchContactOne: function() {
-
+            this.$axios.get('/api/contacts/' + this.no)
+            .then((response) => {
+                console.log(response);
+                this.result = response.data;
+            })
+            .catch((ex) => {
+                console.log("ERROR!!! : ", ex);
+            });
         },
         updateContact: function() {
-
+            axios.put('/api/contacts/' + this.no, {
+                name: this.name,
+                tel: this.tel,
+                address: this.address
+            })
+            .then((response) => {
+                console.log(response);
+                this.name = '';
+                this.tel = '';
+                this.address = '';
+                this.result = response.data;
+            });
         },
         deleteContact: function() {
-
+            axios.delete('/api/contacts' + this.no)
+            .then((response) => {
+                console.log(response);
+                this.no = 0;
+                this.result = response.data;
+            })
+            .catch((ex) => {
+                console.log("ERROR!!! : ", ex);
+            });
         },
         changePhoto: function() {
+            var data = new FormData();
+            var file = this.$refs.photofile.files[0];
+            data.append('photo', file);
 
+            axios.post('/api/contact/' + this.no + '/photo', data)
+            .then((response) => {
+                this.result = response.data;
+            })
+            .catch((ex) => {
+                console.log('updatePhoto failed', ex);
+            });
         }
     }
 }

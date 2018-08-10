@@ -4,6 +4,13 @@ import Vue from 'vue'
 // import App from './App'
 import App from './AppAxiosTest'
 
+// Vue 인스턴스에서 매번 axios를 import하지 않고도 사용할 수 있는 방법
+// Vue.prototype에 axios를 추가한다.
+// 이제 각 Vue 인스턴스에서는 this.$axios를 통해 axios를 import하지 않고도 사용할 수 있다.
+// AppAxiosTest.vue의 fetchContactOne 메소드 참고
+import axios from 'axios';
+Vue.prototype.$axios = axios;
+
 Vue.config.productionTip = false
 
 /* eslint-disable no-new */
