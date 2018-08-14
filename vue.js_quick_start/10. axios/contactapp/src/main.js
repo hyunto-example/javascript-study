@@ -1,8 +1,8 @@
 // The Vue build version to load with the `import` command
 // (runtime-only or standalone) has been set in webpack.base.conf with an alias.
 import Vue from 'vue'
-// import App from './App'
-import App from './AppAxiosTest'
+import App from './App'
+// import App from './AppAxiosTest'
 
 // Vue 인스턴스에서 매번 axios를 import하지 않고도 사용할 수 있는 방법
 // Vue.prototype에 axios를 추가한다.
@@ -10,6 +10,9 @@ import App from './AppAxiosTest'
 // AppAxiosTest.vue의 fetchContactOne 메소드 참고
 import axios from 'axios';
 Vue.prototype.$axios = axios;
+
+// 전역수준에서 Promise Polyfill 사용하도록 설정
+require('es6-promise').polyfill();
 
 Vue.config.productionTip = false
 
