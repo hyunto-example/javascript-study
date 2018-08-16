@@ -10,16 +10,6 @@
 
     <contactList :contactlist="contactlist"></contactList>
 
-    <paginate ref="pagebuttons"
-        :page-count="totalpage"
-        :page-range="7"
-        :margin-pages="3"
-        :click-handler="pageChanged"
-        :prev-text="'이전'"
-        :next-text="'다음'"
-        :container-class="'pagination'"
-        :page-class="'page-item'">
-    </paginate>
   </div>
 </template>
 
@@ -33,7 +23,6 @@ import UpdatePhoto from './components/UpdatePhoto';
 
 import CONF from './Config.js';
 import eventBus from './EventBus';
-import Paginate from 'vuejs-paginate';
 
 export default {
   name: 'app',
@@ -41,8 +30,7 @@ export default {
     ContactList,
     AddContact,
     UpdateContact,
-    UpdatePhoto,
-    Paginate
+    UpdatePhoto
   },
   data: function() {
     return {
@@ -63,7 +51,52 @@ export default {
     }
   },
   mounted() {
+    this.fetchContacts();
     
+    eventBus.$on("cancel", () => {
+      this.currentView = null;
+    });
+
+    eventBus.$on("addSubmit", (contact) => {
+      this.currentView = null;
+      this.addContact(contact);
+    });
+
+    eventBus.$on("updateSubmit", (contact) => {
+      this.currentView = null;
+      this.updateContact(contact);
+    });
+
+    eventBus.$on("addContactForm", () => {
+      this.currentView = 'addContact';
+    });
+
+    eventBus.$on("editContactForm", (no) => {
+      this.fetchContactOne(no)
+      this.currentView = 'updateContact';
+    });
+
+    eventBus.$on("deleteContact", (no) => {
+      this.deleteContact(no);
+    });
+    
+    eventBus.$on("editPhoto", (no) => {
+      this.fetchContacts(no);
+      this.currentView = 'updatePhoto';
+    });
+
+    eventBus.$on("updatePhoto", (no, file) => {
+      if (typeof file !== 'undefined') {
+        this.updatePhoto(no, file);
+      }
+
+      this.currentView = null;
+    });
+
+    eventBus.$on("pageChanged", (page) => {
+      console.log(page);
+      this.pageChanged(page);
+    });
   },
   computed: {
 
