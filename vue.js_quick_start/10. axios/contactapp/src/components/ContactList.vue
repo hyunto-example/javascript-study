@@ -84,7 +84,7 @@ export default {
                 eventBus.$emit("deleteContact", no);
             }
         },
-        editPhoto: function() {
+        editPhoto: function(no) {
             eventBus.$emit("editPhoto", no);
         }
     }

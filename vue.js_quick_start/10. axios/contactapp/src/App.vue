@@ -80,7 +80,7 @@ export default {
     });
     
     eventBus.$on("editPhoto", (no) => {
-      this.fetchContacts(no);
+      this.fetchContactOne(no);
       this.currentView = 'updatePhoto';
     });
 
