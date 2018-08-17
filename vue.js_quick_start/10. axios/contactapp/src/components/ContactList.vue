@@ -61,7 +61,7 @@ export default {
     ],
     computed: {
         totalpage: function() {
-            return Math.floor((this.contactlist.totalcount - 1) / this.contactlist.pageize) + 1;
+            return Math.floor((this.contactlist.totalcount - 1) / this.contactlist.pagesize) + 1;
         }
     },
     watch: {
@@ -79,7 +79,7 @@ export default {
         editContact: function(no) {
             eventBus.$emit("editContactForm", no);
         },
-        deleteContact: function() {
+        deleteContact: function(no) {
             if (confirm("정말로 삭제하시겠습니까?") == true) {
                 eventBus.$emit("deleteContact", no);
             }

@@ -14,8 +14,7 @@
 </template>
 
 <script>
-import Vue from 'vue';
-
+// import Vue from 'vue';
 import ContactList from './components/ContactList';
 import AddContact from './components/AddContact';
 import UpdateContact from './components/UpdateContact';
@@ -50,7 +49,7 @@ export default {
       }
     }
   },
-  mounted() {
+  mounted: function() {
     this.fetchContacts();
     
     eventBus.$on("cancel", () => {
@@ -89,17 +88,12 @@ export default {
       if (typeof file !== 'undefined') {
         this.updatePhoto(no, file);
       }
-
       this.currentView = null;
     });
 
     eventBus.$on("pageChanged", (page) => {
-      console.log(page);
       this.pageChanged(page);
     });
-  },
-  computed: {
-
   },
   methods: {
     pageChanged: function(page) {
@@ -133,8 +127,12 @@ export default {
     addContact: function(contact) {
       this.$axios.post(CONF.ADD, contact)
       .then((response) => {
-        this.contactlist.pageno = 1;
-        this.fetchContacts();
+        if (response.data.status === "success") {
+          this.contactlist.pageno = 1;
+          this.fetchContacts();
+        } else {
+          console.log('연락처 추가 실패 : ' + response.data.message);
+        }
       })
       .catch((ex) => {
         console.log('addContact failed', ex);
@@ -143,7 +141,11 @@ export default {
     updateContact: function(contact) {
       this.$axios.put(CONF.UPDATE.replace("${no}", contact.no), contact)
       .then((response) => {
-        this.fetchContacts();
+        if (response.data.status === "success") {
+          this.fetchContacts();
+        } else {
+          console.log('연락처 변경 실패 : ' + response.data.message);
+        }
       })
       .catch((ex) => {
         console.log('updateContact failed', ex);
@@ -152,7 +154,11 @@ export default {
     deleteContact: function(no) {
       this.$axios.delete(CONF.DELETE.replace("${no}", no))
       .then((response) => {
-        this.fetchContacts();
+        if (response.data.status === "success") {
+          this.fetchContacts();
+        } else {
+          console.log('연락처 삭제 실패 : ' + response.data.message);
+        }
       })
       .catch((ex) => {
         console.log('delete failed', ex);
@@ -164,23 +170,22 @@ export default {
 
       this.$axios.post(CONF.UPDATE_PHOTO.replace("${no}", no), data)
       .then((response) => {
-        this.fetchContacts();
+        if (response.data.status === "success") {
+          this.fetchContacts();
+        } else {
+          console.log('연락처 사진 변경 실패 : ' + response.data.message); 
+        }
       })
       .catch((ex) => {
         console.log('updatePhoto failed', ex);
       })
     }
-  },
-  watch: {
-
   }
 }
 
 </script>
 
-<style>
-@import url("https://cdn.bootcss.com/bootstrap/3.3.5/css/bootstrap.css");
-
+<style scoped>
 #container {
   font-family: 'Avenir', Arial, Helvetica, sans-serif;
   -webkit-font-smoothing: antialiased;

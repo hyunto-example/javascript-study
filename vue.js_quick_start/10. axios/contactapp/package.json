@@ -11,9 +11,10 @@
   },
   "dependencies": {
     "axios": "^0.18.0",
+    "bootstrap": "^3.3.7",
     "es6-promise": "^4.2.4",
     "vue": "^2.5.2",
-    "vuejs-paginate": "^2.0.1"
+    "vuejs-paginate": "^1.9.3"
   },
   "devDependencies": {
     "autoprefixer": "^7.1.2",

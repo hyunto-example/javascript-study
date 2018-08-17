@@ -12,7 +12,12 @@ import axios from 'axios';
 Vue.prototype.$axios = axios;
 
 // 전역수준에서 Promise Polyfill 사용하도록 설정
-require('es6-promise').polyfill();
+// require('es6-promise').polyfill();
+import ES6Promise from 'es6-promise';
+ES6Promise.polyfill();
+
+// Bootstrap 참조
+import 'bootstrap/dist/css/bootstrap.css'
 
 Vue.config.productionTip = false
 
