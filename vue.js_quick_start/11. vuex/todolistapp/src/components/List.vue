@@ -1,23 +1,20 @@
 <template>
     <ul id="todolist">
-        <li v-for="(val, index) in todolist" v-bind:key="val.todo" v-bind:class="checked(val.done)" v-on:click="doneToggle(index)">
+        <li v-for="(val, index) in todolist" v-bind:key="val.todo" v-bind:class="checked(val.done)" v-on:click="doneToggle({index: index})">
             <span>{{ val.todo }}</span>
             <span v-if="val.done"> (완료)</span>
-            <span class="close" v-on:click.stop="deleteTodo(index)">&#x00D7;</span>
+            <span class="close" v-on:click.stop="deleteTodo({index: index})">&#x00D7;</span>
         </li>
     </ul>
 </template>
 
 <script>
 import Constant from '../Constant';
+import { mapState, mapMutations } from 'vuex';
 
 export default {
     name: 'List',
-    computed: {
-        todolist() {
-            return this.$store.state.todolist;
-        }
-    },
+    computed: mapState(['todolist']),
     methods: {
         checked: function(done) {
             if (done) {
@@ -30,12 +27,10 @@ export default {
                 };
             }
         },
-        doneToggle: function(index) {
-            this.$store.commit(Constant.DONE_TOGGLE, {index: index});
-        },
-        deleteTodo: function(index) {
-            this.$store.commit(Constant.DELETE_TODO, {index: index});
-        }
+        ...mapMutations([
+            Constant.DELETE_TODO,
+            Constant.DONE_TOGGLE
+        ])
     }
     
 }
