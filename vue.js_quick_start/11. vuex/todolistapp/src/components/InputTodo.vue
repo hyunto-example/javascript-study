@@ -17,7 +17,10 @@ export default {
     },
     methods: {
         addTodo: function() {
-            this.$store.commit(Constant.ADD_TODO, { todo: this.todo });
+            // 11.5 액션 적용 전 코드
+            // this.$store.commit(Constant.ADD_TODO, { todo: this.todo });
+
+            this.$store.dispatch(Constant.ADD_TODO, { todo: this.todo });
             this.todo = "";
         }
     }

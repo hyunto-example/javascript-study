@@ -27,10 +27,17 @@ export default {
                 };
             }
         },
-        ...mapMutations([
-            Constant.DELETE_TODO,
-            Constant.DONE_TOGGLE
-        ])
+        // 11.5 액션 적용 전 코드
+        // ...mapMutations([
+        //     Constant.DELETE_TODO,
+        //     Constant.DONE_TOGGLE
+        // ])
+        deleteTodo: function(payload) {
+            this.$store.dispatch(Constant.DELETE_TODO, payload);
+        },
+        doneToggle: function(payload) {
+            this.$store.dispatch(Constant.DONE_TOGGLE, payload);
+        }
     }
     
 }
