@@ -22,11 +22,15 @@
 </template>
 
 <script type="text/javascript">
-import { mapState } from 'vuex';
 
 export default {
     name: 'contact-list',
-    computed: mapState([ 'contacts' ])    
+    // computed: mapState([ 'contacts' ])    
+    computed: {
+        contacts: function() {
+            return this.$store.state.m1.contacts;
+        }
+    }
 };
 </script>
 
