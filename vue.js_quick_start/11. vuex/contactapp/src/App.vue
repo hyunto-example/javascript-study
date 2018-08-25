@@ -6,9 +6,9 @@
     </div>
 
     <!-- AddContact, UpdateContact, UpdatePhoto 컴포넌트는 동적 컴포넌트 방식으로 currentView 옵션을 통해 나타낸다 -->
-    <component :is="currentView" :contact="contact"></component>
+    <component :is="currentView"></component>
 
-    <contactList :contactlist="contactlist"></contactList>
+    <contactList></contactList>
 
   </div>
 </template>
@@ -16,171 +16,19 @@
 <script>
 // import Vue from 'vue';
 import ContactList from './components/ContactList';
-import AddContact from './components/AddContact';
-import UpdateContact from './components/UpdateContact';
+import ContactForm from './components/ContactForm';
 import UpdatePhoto from './components/UpdatePhoto';
 
-import CONF from './Config.js';
-import eventBus from './EventBus';
+import { mapState } from 'vuex';
 
 export default {
   name: 'app',
   components: {
     ContactList,
-    AddContact,
-    UpdateContact,
+    ContactForm,
     UpdatePhoto
   },
-  data: function() {
-    return {
-      currentView: null,
-      contact: {
-        no: 0,
-        name: '',
-        tel: '',
-        address: '',
-        photo: ''
-      },
-      contactlist: {
-        pageno: 1,
-        pagesize: CONF.PAGESIZE,
-        totalcount: 0,
-        contacts: []
-      }
-    }
-  },
-  mounted: function() {
-    this.fetchContacts();
-    
-    eventBus.$on("cancel", () => {
-      this.currentView = null;
-    });
-
-    eventBus.$on("addSubmit", (contact) => {
-      this.currentView = null;
-      this.addContact(contact);
-    });
-
-    eventBus.$on("updateSubmit", (contact) => {
-      this.currentView = null;
-      this.updateContact(contact);
-    });
-
-    eventBus.$on("addContactForm", () => {
-      this.currentView = 'addContact';
-    });
-
-    eventBus.$on("editContactForm", (no) => {
-      this.fetchContactOne(no)
-      this.currentView = 'updateContact';
-    });
-
-    eventBus.$on("deleteContact", (no) => {
-      this.deleteContact(no);
-    });
-    
-    eventBus.$on("editPhoto", (no) => {
-      this.fetchContactOne(no);
-      this.currentView = 'updatePhoto';
-    });
-
-    eventBus.$on("updatePhoto", (no, file) => {
-      if (typeof file !== 'undefined') {
-        this.updatePhoto(no, file);
-      }
-      this.currentView = null;
-    });
-
-    eventBus.$on("pageChanged", (page) => {
-      this.pageChanged(page);
-    });
-  },
-  methods: {
-    pageChanged: function(page) {
-      this.contactlist.pageno = page;
-      this.fetchContacts();
-    },
-    fetchContacts: function() {
-      this.$axios.get(CONF.FETCH, {
-        params: {
-          pageno: this.contactlist.pageno,
-          pagesize: this.contactlist.pagesize
-        }
-      })
-      .then((response) => {
-        this.contactlist = response.data;
-      })
-      .catch((ex) => {
-        console.log('fetchContacts failed', ex);
-        this.contactlist.contacts = [];
-      })
-    },
-    fetchContactOne: function(no) {
-      this.$axios.get(CONF.FETCH_ONE.replace("${no}", no))
-      .then((response) => {
-        this.contact = response.data;
-      })
-      .catch((ex) => {
-        console.log('fetchContactOne failed', ex);
-      })
-    },
-    addContact: function(contact) {
-      this.$axios.post(CONF.ADD, contact)
-      .then((response) => {
-        if (response.data.status === "success") {
-          this.contactlist.pageno = 1;
-          this.fetchContacts();
-        } else {
-          console.log('연락처 추가 실패 : ' + response.data.message);
-        }
-      })
-      .catch((ex) => {
-        console.log('addContact failed', ex);
-      })
-    },
-    updateContact: function(contact) {
-      this.$axios.put(CONF.UPDATE.replace("${no}", contact.no), contact)
-      .then((response) => {
-        if (response.data.status === "success") {
-          this.fetchContacts();
-        } else {
-          console.log('연락처 변경 실패 : ' + response.data.message);
-        }
-      })
-      .catch((ex) => {
-        console.log('updateContact failed', ex);
-      })
-    },
-    deleteContact: function(no) {
-      this.$axios.delete(CONF.DELETE.replace("${no}", no))
-      .then((response) => {
-        if (response.data.status === "success") {
-          this.fetchContacts();
-        } else {
-          console.log('연락처 삭제 실패 : ' + response.data.message);
-        }
-      })
-      .catch((ex) => {
-        console.log('delete failed', ex);
-      })
-    },
-    updatePhoto: function(no, file) {
-      var data = new FormData();
-      data.append('photo', file);
-
-      this.$axios.post(CONF.UPDATE_PHOTO.replace("${no}", no), data)
-      .then((response) => {
-        if (response.data.status === "success") {
-          this.fetchContacts();
-        } else {
-          console.log('연락처 사진 변경 실패 : ' + response.data.message); 
-        }
-      })
-      .catch((ex) => {
-        console.log('updatePhoto failed', ex);
-      })
-    }
-  }
+  computed: mapState([ 'currentView' ])
 }
 
 </script>
