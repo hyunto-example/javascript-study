@@ -33,6 +33,7 @@
 import Home from './components/Home.vue';
 import About from './components/About.vue';
 import Contact from './components/Contact.vue';
+import ContactByNo from './components/ContactByNo.vue';
 import VueRouter from 'vue-router';
 
 const router = new VueRouter({
@@ -40,9 +41,10 @@ const router = new VueRouter({
     { path: '/', component: Home },
     { path: '/home', component: Home },
     { path: '/about', component: About },
-    { path: '/contacts', component: Contact }
+    { path: '/contacts', component: Contact },
+    { path: '/contacts/:no', components: ContactByNo }
   ]
-})
+});
 
 export default {
   name: 'app',
