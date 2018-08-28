@@ -42,7 +42,7 @@ const router = new VueRouter({
     { path: '/home', component: Home },
     { path: '/about', component: About },
     { path: '/contacts', component: Contact },
-    { path: '/contacts/:no', components: ContactByNo }
+    { path: '/contacts/:no', component: ContactByNo }
   ]
 });
 
