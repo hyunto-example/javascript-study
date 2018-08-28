@@ -1,6 +1,6 @@
 <template>
     <div>
-        <h1>연락처 상세</h1>
+        <hr class="divider"/>
         <div>
             <table class="detail table table-bordered">
                 <tbody>
@@ -40,6 +40,11 @@ export default {
     created: function() {
         this.no = this.$route.params.no;
     },
+    watch: {
+        '$route': function(to) {
+            this.no = to.params.no;
+        }
+    },
     computed: {
         contact: function() {
             var no = this.no;
@@ -59,5 +64,13 @@ export default {
 <style>
 table.detail {
     width: 400px;
+}
+.divider {
+    height: 3px;
+    margin-left: auto;
+    margin-right: auto;
+    background-color: #FF0066;
+    color: #FF0066;
+    border: 0 none;
 }
 </style>
