@@ -6,7 +6,7 @@
         <ul>
           <li>
             <!-- <a href="#" @click="changeMenu('home')">Home</a> -->
-            <router-link to="/home">Home</router-link>
+            <router-link v-bind:to="{ name: 'home' }">Home</router-link>
           </li>
           <li>
             <!-- <a href="#" @click="changeMenu('about')">About</a> -->
@@ -14,7 +14,7 @@
           </li>
           <li>
             <!-- <a href="#" @click="changeMenu('contact')">Contact</a> -->
-            <router-link to="/contacts">Contacts</router-link>
+            <router-link v-bind:to="{ name: 'contacts' }">Contacts</router-link>
           </li>
         </ul>
       </nav>
@@ -39,13 +39,14 @@ import VueRouter from 'vue-router';
 const router = new VueRouter({
   routes: [
     { path: '/', component: Home },
-    { path: '/home', component: Home },
-    { path: '/about', component: About },
+    { path: '/home', name: 'home', component: Home },
+    { path: '/about', name: 'about', component: About },
     { 
       path: '/contacts', 
+      name: 'contacts',
       component: Contact,
       children: [
-        { path: ':no', component: ContactByNo }
+        { path: ':no', name: 'contactbyno', component: ContactByNo }
       ]
     }    
   ]
