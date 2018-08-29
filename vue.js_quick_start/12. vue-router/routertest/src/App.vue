@@ -6,14 +6,17 @@
         <ul>
           <li>
             <!-- <a href="#" @click="changeMenu('home')">Home</a> -->
+            <!-- <router-link to="/home">Home</router-link> -->
             <router-link v-bind:to="{ name: 'home' }">Home</router-link>
           </li>
           <li>
             <!-- <a href="#" @click="changeMenu('about')">About</a> -->
-            <router-link to="/about">Abount</router-link>
+            <!-- <router-link to="/about">Abount</router-link> -->
+            <router-link v-bind:to="{ name: 'about' }">Abount</router-link>
           </li>
           <li>
             <!-- <a href="#" @click="changeMenu('contact')">Contact</a> -->
+            <!-- <router-link to="/contacts">Contacts</router-link> -->
             <router-link v-bind:to="{ name: 'contacts' }">Contacts</router-link>
           </li>
         </ul>
@@ -46,10 +49,31 @@ const router = new VueRouter({
       name: 'contacts',
       component: Contact,
       children: [
-        { path: ':no', name: 'contactbyno', component: ContactByNo }
+        { 
+          path: ':no', 
+          name: 'contactbyno', 
+          component: ContactByNo,
+          beforeEnter: (to, from, next) => {
+            console.log("@@ beforeEnter : " + from.path + " --> " + to.path);
+
+            if (from.path.startsWith("/contacts"))
+              next();
+            else
+              next("/home");
+          }
+        }
       ]
     }    
   ]
+});
+
+router.beforeEach((to, from, next) => {
+  console.log("** beforeEach **");
+  next();
+});
+
+router.afterEach(() => {
+  console.log("** afterEach **");
 });
 
 export default {
