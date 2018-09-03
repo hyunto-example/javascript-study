@@ -1,9 +1,9 @@
 <template>
     <div>
         <p class="addnew">
-            <button class="btn btn-primary" @click="addContact()">
+            <router-link class="btn btn-primary" v-bind:to="{ name: 'addcontact' }">
                 새로운 연락처 추가하기
-            </button>
+            </router-link>
         </p>
 
         <div id="example">
@@ -44,6 +44,8 @@
             :container-class="'pagination'"
             :page-class="'page-item'">
         </paginate>
+
+        <router-view></router-view>
     </div>
 </template>
 
@@ -63,31 +65,46 @@ export default {
         },
         ...mapState(['contactlist'])
     },
+    // TODO: watch와 mounted 부분이 정확히 무슨 의미일까?
     watch: {
-        ['contactlist.pageno'] : function() {
-            this.$refs.pagebuttons.selected = this.contactlist.pageno - 1;
+        '$route' : function(to, from) {
+            if (to.query.page && to.query.page != this.contactlist.pageno) {
+                var page = to.query.page;
+                this.$store.dispatch(Constant.FETCH_CONTACTS, { pageno: page });
+                this.$refs.pagebuttons.selected = page - 1;
+            }
         }
     },
     mounted() {
-        this.$store.dispatch(Constant.FETCH_CONTACTS, { pageno: 1 });
+        var page = 1;
+
+        if (this.$route.query && this.$route.query.page) {
+            page = parseInt(this.$route.query.page);
+        }
+        this.$store.dispatch(Constant.FETCH_CONTACTS, { pageno: page });
+        this.$refs.pagebuttons.selected = page - 1;
     },
     methods: {
         pageChanged: function(page) {
-            this.$store.dispatch(Constant.FETCH_CONTACTS, { pageno: page });
+            // this.$store.dispatch(Constant.FETCH_CONTACTS, { pageno: page });
+            this.$router.push({ name: 'contacts', query: { page: page }});
         },
         addContact: function() {
             this.$store.dispatch(Constant.ADD_CONTACT_FORM);
         },
         editContact: function(no) {
-            this.$store.dispatch(Constant.EDIT_CONTACT_FORM, { no: no });
+            // this.$store.dispatch(Constant.EDIT_CONTACT_FORM, { no: no });
+            this.$router.push({ name: 'updatecontact', params: { no: no }});
         },
         deleteContact: function(no) {
             if (confirm("정말로 삭제하시겠습니까?") == true) {
                 this.$store.dispatch(Constant.DELETE_CONTACT, { no: no });
+                this.$router.push({ name: 'contacts' });
             }
         },
         editPhoto: function(no) {
-            this.$store.dispatch(Constant.EDIT_PHOTO_FORM, { no: no });
+            // this.$store.dispatch(Constant.EDIT_PHOTO_FORM, { no: no });
+            this.$router.push({ name: 'updatephoto', params: { no: no }});
         }
     }
 };
