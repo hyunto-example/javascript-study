@@ -40,5 +40,8 @@ export default {
             address: '',
             photo: ''
         }
+    },
+    [Constant.CHANGE_ISLOADING]: (state, payload) => {
+        state.isloading = payload.isloading;
     }
 }

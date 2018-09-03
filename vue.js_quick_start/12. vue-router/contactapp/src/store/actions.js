@@ -23,6 +23,10 @@ export default {
     //     store.commit(Constant.CANCEL_FORM);
     // },
 
+    [Constant.CHANGE_ISLOADING]: (store, payload) => {
+        store.commit(Constant.CHANGE_ISLOADING, payload);
+    },
+
     [Constant.FETCH_CONTACTS]: (store, payload) => {
         var pageno;
         if (typeof payload === "undefined" || typeof payload.pageno === "undefined")
@@ -31,6 +35,7 @@ export default {
             pageno = payload.pageno;
 
         var pagesize = store.state.contactlist.pagesize;
+        store.dispatch(Constant.CHANGE_ISLOADING, { isloading: true });
 
         axios.get(CONF.FETCH, {
             params: {
@@ -41,10 +46,13 @@ export default {
             store.commit(Constant.FETCH_CONTACTS, {
                 contactlist: response.data
             });
+            store.dispatch(Constant.CHANGE_ISLOADING, { isloading: false });
         });
     },
 
     [Constant.ADD_CONTACT]: (store) => {
+        store.dispatch(Constant.CHANGE_ISLOADING, { isloading: true });
+
         axios.post(CONF.ADD, store.state.contact)
             .then((response) => {
                 if (response.data.status === "success") {
@@ -60,6 +68,8 @@ export default {
     },
 
     [Constant.UPDATE_CONTACT]: (store) => {
+        store.dispatch(Constant.CHANGE_ISLOADING, { isloading: true });
+
         var currentPageNo = store.state.contactlist.pageno;
         var contact = store.state.contact;
 
@@ -78,6 +88,8 @@ export default {
     },
 
     [Constant.UPDATE_PHOTO]: (store, payload) => {
+        store.dispatch(Constant.CHANGE_ISLOADING, { isloading: true });
+
         var currentPageNo = store.state.contactlist.pageno;
         var data = new FormData();
         data.append('photo', payload.file);
@@ -90,6 +102,8 @@ export default {
     },
 
     [Constant.DELETE_CONTACT]: (store, payload) => {
+        store.dispatch(Constant.CHANGE_ISLOADING, { isloading: true });
+
         var currentPageNo = store.state.contactlist.pageno;
 
         axios.delete(CONF.DELETE.replace("${no}", payload.no))
@@ -104,9 +118,12 @@ export default {
     },
 
     [Constant.FETCH_CONTACT_ONE]: (store, payload) => {
+        store.dispatch(Constant.CHANGE_ISLOADING, { isloading: true });
+
         axios.get(CONF.FETCH_ONE.replace("${no}", payload.no))
             .then((response) => {
                 store.commit(Constant.FETCH_CONTACT_ONE, { contact: response.data });
+                store.dispatch(Constant.CHANGE_ISLOADING, { isloading: false });
             })
     },
 

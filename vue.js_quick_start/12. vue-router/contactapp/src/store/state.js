@@ -3,6 +3,7 @@ import CONF from '../Config';
 export default {
     // currentView: null,
     // mode: 'add',
+    isloading: false,
     contact: {
         no: 0,
         name: '',
@@ -15,5 +16,5 @@ export default {
         pagesize: CONF.PAGESIZE,
         totalcount: 0,
         contacts: []
-    }
+    }    
 }

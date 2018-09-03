@@ -16,6 +16,7 @@
     </div>
 
     <router-view></router-view>
+    <loading v-show="isloading"></loading>
   </div>
 </template>
 
@@ -24,19 +25,26 @@
 // import ContactList from './components/ContactList';
 // import ContactForm from './components/ContactForm';
 // import UpdatePhoto from './components/UpdatePhoto';
-
+import Loading from './components/Loading';
 import { mapState } from 'vuex';
 
 export default {
   name: 'app',
-  // components: {
-  //   ContactList,
-  //   ContactForm,
-  //   UpdatePhoto
-  // },
+  components: {
+    // ContactList,
+    // ContactForm,
+    // UpdatePhoto,
+    Loading
+  },
   // computed: mapState([ 'currentView' ])
+  // computed: mapState([ 'isloading '])
+  computed: {
+    // mapState 헬퍼 사용사 isloading 상태값을 Vuex가 정상적으로 가져오지 못하는 이슈가 있어서 수정
+    isloading () {
+      return this.$store.state.isloading;
+    }
+  }
 }
-
 </script>
 
 <style scoped>

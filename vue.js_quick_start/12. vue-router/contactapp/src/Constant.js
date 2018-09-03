@@ -8,6 +8,7 @@ export default {
     FETCH_CONTACTS: "fetchContacts",
     FETCH_CONTACT_ONE: "fetchContactOne",
     INITIALIZE_CONTACT_ONE: "initializeContactOne",
+    CHANGE_ISLOADING: "changeIsLoading",
 
     // 액션에서만 사용
     ADD_CONTACT: "addContact",
